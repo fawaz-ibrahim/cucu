@@ -1,17 +1,19 @@
 pipeline{
     agent any
-    tools {
-        maven 'Maven_3.5.2'
-    }
+
     stages {
         stage ('Compile Stage') {
             steps{
-                bat "mvn clean install"
+                withMaven(maven: 'maven_3.6.3'){
+                    bat('mvn clean install')
+                }
             }
         }
         stage ('Test Stage') {
             steps{
-                bat "mvn test"
+                withMaven(maven: 'maven_3.6.3'){
+                    bat('mvn test')
+                }
             }
         }
         stage ('Cucumber Reports') {
