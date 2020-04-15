@@ -11,12 +11,29 @@ pipeline{
                 }
             }
         }
-        stage ('Test Stage') {
-            steps{
-                withMaven(maven: 'maven_3.6.3'){
-                    bat('mvn test')
+        try{
+            stage ('Test Stage') {
+                steps{
+                    withMaven(maven: 'maven_3.6.3'){
+                        bat('mvn test')
+                    }
+                }
+                post {
+                    success {
+                        script {
+                            ISFAILED = false
+                        }
+                    }
+                    failure {
+                        script {
+                            
+                        }
+
+                    }
                 }
             }
+        }catch(e) {
+             ISFAILED = true
         }
         stage ('Cucumber Reports') {
             steps{
@@ -24,28 +41,16 @@ pipeline{
                     fileIncludePattern: "**/cucumber.json",
                     jsonReportDirectory: 'target'
             }
-
-            post {
-                success {
-                    script {
-                        ISFAILED = "NO"
-                    }
-                }
-                failure {
-                    script {
-                        ISFAILED = "YES"
-                    }
-
-                }
-            }
         }
         stage ('Stop Execution if failure') {
             steps {
                 script {
-                    if(ISFAILED == "YES"){
+                    if(ISFAILED == true){
                         echo "Cucumber failed"
+                        currentBuild.result = "FAILURE"
                     }else{
                         echo "Build continues"
+                        currentBuild.result = "SUCCESS"
                     }
                 }
             }
