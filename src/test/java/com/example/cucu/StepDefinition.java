@@ -49,7 +49,7 @@ public class StepDefinition {
     @Then("I should be able to see my created post")
     public void i_should_be_able_to_see_my_created_post() {
         String url = postUrl + ":" + port + "/post/" + postId;
-        Post myPost = restTemplate.getForObject(url, Post.class);
+        Post myPost = null;//restTemplate.getForObject(url, Post.class);
         Assert.assertNotNull(myPost);
     }
 
