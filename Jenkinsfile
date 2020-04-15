@@ -1,4 +1,4 @@
-def isFailed = false
+def ISFAILED = "NO"
 
 pipeline{
     agent any
@@ -24,17 +24,9 @@ pipeline{
                     fileIncludePattern: "**/cucumber.json",
                     jsonReportDirectory: 'target'
             }
-            post {
-                success {
-                    isFailed = false
-                }
-                failure {
-                    isFailed = true
-                }
-            }
         }
         stage ('Stop Execution if failure') {
-            if(isFailed){
+            if(ISFAILED == "NO"){
                 echo "Cucumber failed"
             }else{
                 echo "Build continues"
