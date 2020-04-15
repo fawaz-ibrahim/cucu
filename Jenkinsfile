@@ -24,12 +24,30 @@ pipeline{
                     fileIncludePattern: "**/cucumber.json",
                     jsonReportDirectory: 'target'
             }
+
+            post {
+                success {
+                    script {
+                        ISFAILED = "NO"
+                    }
+                }
+                failure {
+                    script {
+                        ISFAILED = "YES"
+                    }
+
+                }
+            }
         }
         stage ('Stop Execution if failure') {
-            if(ISFAILED == "NO"){
-                echo "Cucumber failed"
-            }else{
-                echo "Build continues"
+            steps {
+                script {
+                    if(ISFAILED == "YES"){
+                        echo "Cucumber failed"
+                    }else{
+                        echo "Build continues"
+                    }
+                }
             }
         }
     }
